@@ -1,0 +1,16 @@
+*vim*
+tags
+.ccls-cache
+.clangd
+
+build/
+!build/.gitkeep
+
+*.o
+*.so*
+
+sandbox/
+
+build/
+html/
+latex/

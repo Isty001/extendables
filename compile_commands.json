@@ -1,0 +1,30 @@
+[
+ {
+  "directory": "/home/farkasvolgyi.istvan/c-projects/extension",
+  "arguments": [
+   "cc",
+   "-MMD",
+   "-std=c99",
+   "-g",
+   "-Wall",
+   "-Wextra",
+   "-ftrapv",
+   "-Wshadow",
+   "-Wundef",
+   "-Wcast-align",
+   "-Wunreachable-code",
+   "-fstack-protector",
+   "-D_FORTIFY_SOURCE=2",
+   "-O1",
+   "-Os",
+   "-I",
+   ".",
+   "-c",
+   "-fpic",
+   "src/app.c",
+   "-o",
+   "build/src/app.o"
+  ],
+  "file": "src/app.c"
+ }
+]
