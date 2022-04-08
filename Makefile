@@ -1,4 +1,4 @@
-DEPS = -llua -lm -ldl
+DEPS = -l:liblua.a -ldl -lm
 
 ifdef EXT_DEBUG
 	CFLAGS += -g

@@ -7,7 +7,9 @@ build/
 !build/.gitkeep
 
 *.o
+*.out
 *.so*
+extendables-test
 
 sandbox/
 

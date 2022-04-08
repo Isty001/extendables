@@ -1,3 +1,4 @@
+---
 name: Tests
 on: [push, pull_request]
 
@@ -9,10 +10,10 @@ jobs:
       - name: System Setup
         shell: bash
         run: |
-          sudo apt update -y
           wget http://www.lua.org/ftp/lua-5.4.4.tar.gz
           tar xvfz lua-5.4.4.tar.gz
           cd lua-5.4.4
+          sed -i 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile # relocation R_X86_64_PC32 against symbol `lua_newstate' can not be used when making a shared object; recompile with -fPIC
           sudo make linux install
       - uses: actions/checkout@v2
       - name: Run Tests
@@ -25,10 +26,10 @@ jobs:
       - name: System Setup
         shell: bash
         run: |
-          sudo apt update -y
           wget http://www.lua.org/ftp/lua-5.4.4.tar.gz
           tar xvfz lua-5.4.4.tar.gz
           cd lua-5.4.4
+          sed -i 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile
           sudo make macos install
       - uses: actions/checkout@v2
       - name: Run Tests
