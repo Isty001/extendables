@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
-          make test
+          sudo make test
   macos:
     name: macOS
     runs-on: macos-latest
@@ -34,4 +34,4 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
-          make test
+          sudo make test
