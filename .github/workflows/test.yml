@@ -13,13 +13,14 @@ jobs:
           wget http://www.lua.org/ftp/lua-5.4.4.tar.gz
           tar xvfz lua-5.4.4.tar.gz
           cd lua-5.4.4
-           # relocation R_X86_64_PC32 against symbol `lua_newstate' can not be used when making a shared object; recompile with -fPIC
+          sed -i 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile # relocation R_X86_64_PC32 against symbol `lua_newstate' can not be used when making a shared object; recompile with -fPIC
+          sudo make
           sudo make install
-          sudo ldconfig
-          sudo make linux install
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
+          sudo make install
+          sudo ldconfig
           sudo make test
   macos:
     name: macOS
@@ -31,9 +32,12 @@ jobs:
           wget http://www.lua.org/ftp/lua-5.4.4.tar.gz
           tar xvfz lua-5.4.4.tar.gz
           cd lua-5.4.4
-          sed -i '' 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile
-          sudo make macos install
+          sed -i 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile
+          sudo make
+          sudo make install
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
+          sudo make install
+          sudo ldconfig
           sudo make test
