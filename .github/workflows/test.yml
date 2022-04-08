@@ -10,7 +10,10 @@ jobs:
         shell: bash
         run: |
           sudo apt update -y
-          sudo apt install -qq liblua5.3-dev
+          wget http://www.lua.org/ftp/lua-5.4.4.tar.gz
+          tar xvfz lua-5.4.4.tar.gz
+          cd lua-5.4.4
+          make linux install
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
@@ -19,6 +22,14 @@ jobs:
     name: macOS
     runs-on: macos-latest
     steps:
+      - name: System Setup
+        shell: bash
+        run: |
+          sudo apt update -y
+          wget http://www.lua.org/ftp/lua-5.4.4.tar.gz
+          tar xvfz lua-5.4.4.tar.gz
+          cd lua-5.4.4
+          make macos install
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
