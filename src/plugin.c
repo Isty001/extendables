@@ -58,7 +58,7 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     }
 
     if (opts && app->load) {
-        code = app->load(plugin->lua, opts->user_data);
+        code = EXT_CALL_OK == app->load(plugin->lua, opts->user_data) ? EXT_CODE_OK : EXT_CODE_PLUGIN_FAILURE;
     }
 
     if (EXT_CODE_OK == code) {
@@ -83,7 +83,7 @@ ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_pl
     ext_code code = EXT_CODE_OK;
 
     if (opts && app->remove) {
-        code = app->remove(plugin->lua, opts->user_data);
+        code = EXT_CALL_OK == app->remove(plugin->lua, opts->user_data) ? EXT_CODE_OK : EXT_CODE_PLUGIN_FAILURE;
     }
 
     if (EXT_CODE_OK == code) {

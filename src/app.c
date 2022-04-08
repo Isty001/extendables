@@ -12,7 +12,7 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
     *app = malloc(sizeof(ext_app));
 
     (*app)->log_level   = opts && opts->log_level ? opts->log_level : EXT_LOG_LEVEL_DEBUG;
-    (*app)->load        = opts && opts->load_functon ? opts->load_functon : NULL;
+    (*app)->load        = opts && opts->load_function ? opts->load_function : NULL;
     (*app)->remove      = opts && opts->remove_function ? opts->remove_function : NULL;
     (*app)->plugin_list = NULL;
 

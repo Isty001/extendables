@@ -5,7 +5,7 @@
 #include <lua.h>
 #include <stdint.h>
 
-typedef enum { EXT_CODE_OK, EXT_CODE_ALLOC_FAILED, EXT_CODE_LUA_ERROR, EXT_CODE_INVALID_ARGUMENT, EXT_CODE_PLUGIN_CALL_INCOMPLETE, EXT_CODE_NOT_FOUND } ext_code;
+typedef enum { EXT_CODE_OK, EXT_CODE_ALLOC_FAILED, EXT_CODE_LUA_ERROR, EXT_CODE_INVALID_ARGUMENT, EXT_CODE_PLUGIN_CALL_INCOMPLETE, EXT_CODE_NOT_FOUND, EXT_CODE_PLUGIN_FAILURE } ext_code;
 
 typedef enum {
     EXT_LOG_LEVEL_DEBUG = 500,
@@ -13,12 +13,14 @@ typedef enum {
     EXT_LOG_LEVEL_ERROR = 100,
 } ext_log_level;
 
-typedef ext_code (*ext_plugin_function)(lua_State *lua, void *user_data);
+typedef enum { EXT_CALL_OK, EXT_CALL_FAILED } ext_call_code;
+
+typedef ext_call_code (*ext_plugin_function)(lua_State *lua, void *user_data);
 
 typedef struct {
     ext_log_level log_level;
     char *log_file;
-    ext_plugin_function load_functon;
+    ext_plugin_function load_function;
     ext_plugin_function remove_function;
 } ext_app_init_opts;
 

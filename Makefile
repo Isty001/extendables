@@ -12,13 +12,13 @@ ifndef EXT_DEBUG
 endif
 
 
-SRC = $(shell find src -name "*.c") $(shell find deps -name "*.c")
+SRC = $(shell find src -name "*.c" -not -path src/bin/*) $(shell find deps -name "*.c")
 TEST_SRC = $(shell find test -name "*.c")
 
 TARGET = extendables
 TEST_TARGET = $(TARGET)-test
 
-VERSION_MAJOR = 0
+VERSION_MAJOR = 1
 VERSION_MINOR = 0
 VERSION_PATCH = 0
 
