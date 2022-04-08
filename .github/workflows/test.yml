@@ -38,6 +38,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
+          sudo update_dyld_shared_cache
           sudo make install
-          sudo ldconfig
           sudo make test
