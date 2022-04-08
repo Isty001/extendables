@@ -10,7 +10,7 @@ jobs:
         shell: bash
         run: |
           sudo apt update -y
-          sudo apt install -qq lua5.3-dev
+          sudo apt install -qq liblua5.3-dev
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
