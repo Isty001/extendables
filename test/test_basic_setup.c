@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "../deps/minunit/minunit.h"
 #include "../deps/strdup/strdup.h"
-#include "../include/extendables.h"
+#include <extendables/extendables.h>
 
 typedef struct test_load_ctx {
     char *parameter;
