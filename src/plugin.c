@@ -104,7 +104,7 @@ ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_pl
 ext_code ext_plugin_call(const ext_app *app, ext_plugin_function function, const ext_app_call_opts *opts)
 {
     ext_app_plugin_item *item = app->plugin_list;
-    ext_code code             = EXT_CODE_OK;
+    ext_call_code code             = EXT_CALL_OK;
     bool had_errors           = false;
 
     while (item) {

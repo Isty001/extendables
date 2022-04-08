@@ -27,6 +27,8 @@ SONAME = $(LIB_OBJ).$(VERSION_MAJOR)
 MINOR_NAME = $(SONAME).$(VERSION_MINOR)
 FULL_NAME = $(MINOR_NAME).$(VERSION_PATCH)
 
+OS := $(shell uname)
+
 ifeq ($(OS),Darwin)
 	SONAME_ARG = -install_name,$(SONAME)
 else
