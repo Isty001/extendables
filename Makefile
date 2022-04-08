@@ -27,6 +27,12 @@ SONAME = $(LIB_OBJ).$(VERSION_MAJOR)
 MINOR_NAME = $(SONAME).$(VERSION_MINOR)
 FULL_NAME = $(MINOR_NAME).$(VERSION_PATCH)
 
+ifeq ($(OS),Darwin)
+	SONAME_ARG = -install_name,$(SONAME)
+else
+	SONAME_ARG = -soname,$(SONAME)
+endif
+
 INCLUDE_DIR = /usr/local/include/$(TARGET)
 LIB_DIR = /usr/local/lib
 
@@ -49,7 +55,7 @@ $(DIR_BUILD)/%.o: %.c
 
 
 $(TARGET): $(OBJECTS)
-	$(CC) -shared -fpic -Wl,-soname,$(SONAME) -o $(FULL_NAME) $(OBJECTS) $(DEPS)
+	$(CC) -shared -fpic -Wl,$(SONAME_ARG) -o $(FULL_NAME) $(OBJECTS) $(DEPS)
 
 $(TEST_TARGET): $(TEST_OBJECTS)
 	$(CC) $(TEST_OBJECTS) $(CFLAGS) -o $@
