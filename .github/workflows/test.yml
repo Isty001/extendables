@@ -6,6 +6,11 @@ jobs:
     name: Linux
     runs-on: ubuntu-latest
     steps:
+      - name: System Setup
+        shell: bash
+        run: |
+          sudo apt update -y
+          sudo apt install -qq lua5.4
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
@@ -16,4 +21,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run Tests
-        run: make test
+        run: |
+          make test
