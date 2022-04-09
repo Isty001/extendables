@@ -1,3 +1,4 @@
+CC = clang
 DEPS = -l:liblua.a -ldl -lm
 
 ifdef EXT_DEBUG
@@ -51,7 +52,7 @@ default: $(TARGET)
 
 $(DIR_BUILD)/%.o: %.c
 	mkdir -p $(shell dirname $@)
-	$(CC) -MMD $(CFLAGS) -c -fpic $< -o $@ $(DEPS)
+	$(CC) -MMD $(CFLAGS) -c -fpic $< -o $@
 
 .PRECIOUS: $(TARGET) $(OBJECTS)
 
@@ -61,9 +62,6 @@ $(TARGET): $(OBJECTS)
 
 $(TEST_TARGET): $(TEST_OBJECTS)
 	$(CC) $(TEST_OBJECTS) $(CFLAGS) -o $@
-
-project-init:
-	rm -f ./src/.gitkeep ./test/.gitkeep ./include/.gitkeep
 
 clean:
 	rm -rf $(DIR_BUILD)/*
