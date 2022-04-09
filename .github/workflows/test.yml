@@ -32,7 +32,7 @@ jobs:
           wget http://www.lua.org/ftp/lua-5.4.4.tar.gz
           tar xvfz lua-5.4.4.tar.gz
           cd lua-5.4.4
-          sed -i '' 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile
+          # sed -i '' 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile
           sudo make
           sudo make install
       - uses: actions/checkout@v2
