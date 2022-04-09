@@ -1,4 +1,4 @@
-CC = clang
+CC ?= gcc
 DEPS = -l:liblua.a -ldl -lm
 
 ifdef EXT_DEBUG
@@ -77,7 +77,7 @@ install: $(TARGET)
 compile-test:
 	$(CC) $(TEST_CFLAGS) $(TEST_SRC) -o $(TEST_TARGET) -l$(TARGET)
 
-test: $(TARGET) install compile-test
+test: clean $(TARGET) install compile-test
 	./$(TEST_TARGET)
 
 format:
