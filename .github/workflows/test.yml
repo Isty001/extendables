@@ -38,10 +38,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
-          export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/lib
-          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-          ls -la /usr/local/lib | grep lua
-          echo $LD_LIBRARY_PATH
-          echo $LIBRARY_PATH
-          sudo make install
+          CFLAGS=-L /usr/local/lib sudo make install
           sudo make test
