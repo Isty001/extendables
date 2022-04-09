@@ -39,6 +39,6 @@ jobs:
       - name: Run Tests
         run: |
           export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/lib
+          echo $LIBRARY_PATH
           sudo make install
-          sudo update_dyld_shared_cache
           sudo make test
