@@ -33,8 +33,8 @@ jobs:
           tar xvfz lua-5.4.4.tar.gz
           cd lua-5.4.4
           # sed -i '' 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile
-          sudo make
-          sudo make install
+          make
+          make install
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
