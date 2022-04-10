@@ -38,5 +38,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
-          sudo CFLAGS="-L /usr/local/lib" make install
+          export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/lib
+          ls -la /usr/local/lib
+          echo $LIBRARY_PATH
+          sudo make install
           sudo make test
