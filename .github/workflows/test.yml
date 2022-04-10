@@ -14,7 +14,7 @@ jobs:
           tar xvfz lua-5.4.4.tar.gz
           cd lua-5.4.4
           sed -i 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile # relocation R_X86_64_PC32 against symbol `lua_newstate' can not be used when making a shared object; recompile with -fPIC
-          sudo make
+          make
           sudo make install
       - uses: actions/checkout@v2
       - name: Run Tests
@@ -34,12 +34,12 @@ jobs:
           cd lua-5.4.4
           # sed -i '' 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile
           make
-          make install
+          sudo make install
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
-          export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/lib
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/usr/local/lib
           ls -la /usr/local/lib
-          echo $LIBRARY_PATH
+          echo $DYLD_LIBRARY_PATH
           sudo make install
           sudo make test
