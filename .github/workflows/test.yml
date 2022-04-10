@@ -22,24 +22,24 @@ jobs:
           sudo make install
           sudo ldconfig
           sudo make test
-  macos:
-    name: macOS
-    runs-on: macos-latest
-    steps:
-      - name: System Setup
-        shell: bash
-        run: |
-          wget http://www.lua.org/ftp/lua-5.4.4.tar.gz
-          tar xvfz lua-5.4.4.tar.gz
-          cd lua-5.4.4
-          # sed -i '' 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile
-          make
-          sudo make install
-      - uses: actions/checkout@v2
-      - name: Run Tests
-        run: |
-          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/usr/local/lib
-          ls -la /usr/local/lib
-          echo $DYLD_LIBRARY_PATH
-          sudo make install
-          sudo make test
+#   macos:
+#     name: macOS
+#     runs-on: macos-latest
+#     steps:
+#       - name: System Setup
+#         shell: bash
+#         run: |
+#           wget http://www.lua.org/ftp/lua-5.4.4.tar.gz
+#           tar xvfz lua-5.4.4.tar.gz
+#           cd lua-5.4.4
+#           # sed -i '' 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile
+#           make
+#           sudo make install
+#       - uses: actions/checkout@v2
+#       - name: Run Tests
+#         run: |
+#           export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/usr/local/lib
+#           ls -la /usr/local/lib
+#           echo $DYLD_LIBRARY_PATH
+#           sudo make install
+#           sudo make test
