@@ -26,21 +26,25 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
     if (!(*app))
         return EXT_CODE_ALLOC_FAILED;
 
+    ext_log_debug(*app, "%s(): App initialized successfully", __func__);
+
     return code;
 }
 
-ext_code ext_app_destroy(ext_app *app)
+ext_code ext_app_destroy(ext_app *app, const ext_app_destroy_opts *opts)
 {
     ext_check_not_null_arg(app);
 
     ext_code code   = EXT_CODE_OK;
     bool had_errors = false;
 
+    ext_plugin_remove_opts remove_opts;
     ext_app_plugin_item *tmp_item  = NULL;
     ext_app_plugin_item *curr_item = app->plugin_list;
 
     while (curr_item) {
-        code = ext_plugin_destroy(app, curr_item->plugin, NULL);
+        remove_opts.user_data = opts ? opts->remove_function_user_data : NULL;
+        code = ext_plugin_destroy(app, curr_item->plugin, &remove_opts);
 
         if (EXT_CODE_OK != code) {
             had_errors = true;
@@ -50,6 +54,8 @@ ext_code ext_app_destroy(ext_app *app)
         free(curr_item);
         curr_item = tmp_item;
     }
+
+    ext_log_debug(app, "%s(): App cleaned up successfully", __func__);
 
     ext_log_cleanup(app);
     free(app);

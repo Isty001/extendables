@@ -28,7 +28,11 @@ typedef struct ext_app ext_app;
 
 ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts);
 
-ext_code ext_app_destroy(ext_app *app);
+typedef struct {
+    void *remove_function_user_data;
+} ext_app_destroy_opts;
+
+ext_code ext_app_destroy(ext_app *app, const ext_app_destroy_opts *opts);
 
 typedef struct {
     void *user_data;

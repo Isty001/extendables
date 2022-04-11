@@ -51,7 +51,7 @@ MU_TEST(test_basic_setup)
 
     free((void *) load_ctx.return_val);
 
-    mu_assert(EXT_CODE_OK == ext_app_destroy(app), "Should return EXT_CODE_OK");
+    mu_assert(EXT_CODE_OK == ext_app_destroy(app, NULL), "Should return EXT_CODE_OK");
 }
 
 void basic_setup_test_suite(void)

@@ -5,7 +5,7 @@ ifdef EXT_DEBUG
 	CFLAGS += -g
 endif
 
-CFLAGS += -std=c99 -Wall -Wextra -ftrapv -Wshadow -Wundef -Wcast-align -Wunreachable-code -fstack-protector -D_FORTIFY_SOURCE=2
+CFLAGS += -std=c99 -Wall -Wextra -Werror -Wpedantic -ftrapv -Wshadow -Wundef -Wcast-align -Wunreachable-code -fstack-protector -D_FORTIFY_SOURCE=2
 CFLAGS += -I .
 
 ifndef EXT_DEBUG
@@ -65,6 +65,7 @@ $(TEST_TARGET): $(TEST_OBJECTS)
 
 clean:
 	rm -rf $(DIR_BUILD)/*
+	rm -f $(TEST_TARGET)
 
 install: $(TARGET)
 	sudo mv $(FULL_NAME) $(LIB_DIR)

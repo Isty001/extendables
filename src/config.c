@@ -17,7 +17,7 @@ static FILE *open_file(const ext_app *app, const ext_plugin *plugin)
     FILE *file = fopen(path, "r");
 
     if (!file)
-        ext_log_error(app, "Unable to open config file: %s", path);
+        ext_log_error(app, "%s(): Unable to open config file: %s", __func__, path);
 
     return file;
 }
@@ -27,7 +27,7 @@ static char *get_required_string(const ext_app *app, toml_table_t *cfg, const ch
     toml_datum_t value = toml_string_in(cfg, key);
 
     if (!value.ok) {
-        ext_log_error(app, "get_required_string(): Missing mandatory configuration: %s", key);
+        ext_log_error(app, "%s(): Missing mandatory configuration: %s", __func__, key);
 
         return NULL;
     }
@@ -47,7 +47,7 @@ ext_code ext_config_load(const ext_app *app, ext_plugin *plugin)
     fclose(file);
 
     if (!cfg) {
-        ext_log_error(app, "ext_config_load(): Cannot parse config: %s%s%s - %s", plugin->path, EXT_DIRECTORY_SEPARATOR, FILE_NAME, toml_error);
+        ext_log_error(app, "%s(): Cannot parse config: %s%s%s - %s", __func__, plugin->path, EXT_DIRECTORY_SEPARATOR, FILE_NAME, toml_error);
 
         return EXT_CODE_INVALID_ARGUMENT;
     }
@@ -55,7 +55,7 @@ ext_code ext_config_load(const ext_app *app, ext_plugin *plugin)
     toml_table_t *plugin_cfg = toml_table_in(cfg, "plugin");
 
     if (!plugin_cfg) {
-        ext_log_error(app, "ext_config_load(): No [plugin] section in config: %s%s%s", plugin->path, EXT_DIRECTORY_SEPARATOR, FILE_NAME);
+        ext_log_error(app, "%s(): No [plugin] section in config: %s%s%s", __func__, plugin->path, EXT_DIRECTORY_SEPARATOR, FILE_NAME);
         toml_free(cfg);
 
         return EXT_CODE_INVALID_ARGUMENT;
@@ -66,6 +66,8 @@ ext_code ext_config_load(const ext_app *app, ext_plugin *plugin)
 
     if (NULL == plugin->api_version)
         return EXT_CODE_INVALID_ARGUMENT;
+
+    ext_log_debug(app, "%s(): Config loaded: %s%s%s", __func__, plugin->path, EXT_DIRECTORY_SEPARATOR, FILE_NAME);
 
     return EXT_CODE_OK;
 }

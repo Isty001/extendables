@@ -35,7 +35,7 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     ext_code code = ext_config_load(app, plugin);
 
     if (EXT_CODE_OK != code) {
-        ext_log_error(app, "No config loaded for plugin: %s", plugin->path);
+        ext_log_error(app, "%s(): No config loaded for plugin: %s", __func__, plugin->path);
 
         goto cleanup;
     }
@@ -51,7 +51,7 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     luaL_openlibs(plugin->lua);
 
     if (0 != luaL_dofile(plugin->lua, entry_point)) {
-        ext_log_error(app, "ext_plugin_lua_init(): Unable to initialize plugin %s - luaL_dofile(): error loading file: %s", entry_point, lua_tostring(plugin->lua, -1));
+        ext_log_error(app, "%s(): Unable to initialize plugin %s - luaL_dofile(): error loading file: %s", __func__, entry_point, lua_tostring(plugin->lua, -1));
         code = EXT_CODE_LUA_ERROR;
 
         goto cleanup;
@@ -62,9 +62,9 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     }
 
     if (EXT_CODE_OK == code) {
-        ext_log_debug(app, "%s(): Successfully initialized plugin: %s", __FUNCTION__, path);
+        ext_log_info(app, "%s(): Successfully initialized plugin: %s", __func__, path);
     } else {
-        ext_log_error(app, "%s(): Unable to initialize plugin: %s - Load function failed.", __FUNCTION__, path);
+        ext_log_error(app, "%s(): Unable to initialize plugin: %s - Load function failed.", __func__, path);
 
         goto cleanup;
     }
@@ -87,9 +87,9 @@ ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_pl
     }
 
     if (EXT_CODE_OK == code) {
-        ext_log_debug(app, "%s(): Successfully removed plugin: %s", __FUNCTION__, plugin->path);
+        ext_log_info(app, "%s(): Successfully removed plugin: %s", __func__, plugin->path);
     } else {
-        ext_log_error(app, "%s(): Unable to remove plugin: %s - Remove function failed.", __FUNCTION__, plugin->path);
+        ext_log_error(app, "%s(): Unable to remove plugin: %s - Remove function failed.", __func__, plugin->path);
     }
 
     lua_close(plugin->lua);
@@ -112,8 +112,8 @@ ext_code ext_plugin_call(const ext_app *app, ext_plugin_function function, const
 
         code = function(item->plugin->lua, opts->user_data);
 
-        if (EXT_CODE_OK != code) {
-            ext_log_error(app, "%s(): Function call returned error code: %d in plugin %s", __FUNCTION__, code, item->plugin->path);
+        if (EXT_CALL_OK != code) {
+            ext_log_error(app, "%s(): Function call returned error code: %d in plugin %s", __func__, code, item->plugin->path);
             had_errors = true;
         }
     }
@@ -131,7 +131,7 @@ ext_code ext_plugin_get_attributes(const ext_app *app, ext_plugin *plugin, toml_
     *attributes = toml_table_in(plugin->config, "attributes");
 
     if (!*attributes) {
-        ext_log_debug(app, "%s(): No attributes set for plugin: %s", __FUNCTION__, plugin->path);
+        ext_log_debug(app, "%s(): No attributes set for plugin: %s", __func__, plugin->path);
 
         return EXT_CODE_NOT_FOUND;
     }
