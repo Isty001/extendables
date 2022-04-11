@@ -28,8 +28,10 @@ static ext_call_code plugin_remove(lua_State *lua, void *user_data)
     return EXT_CALL_OK;
 }
 
-MU_TEST(test_basic_remove)
+void test_basic_remove(void)
 {
+    ext_test_suite_display();
+
     ext_app *app = NULL;
     ext_app_init_opts opts = {
         .remove_function = plugin_remove,
@@ -55,11 +57,4 @@ MU_TEST(test_basic_remove)
     free((void *) remove_ctx.return_val);
 
     mu_assert(EXT_CODE_OK == ext_app_destroy(app, NULL), "Should return EXT_CODE_OK");
-}
-
-void basic_remove_test_suite(void)
-{
-    ext_test_suite_display();
-
-    MU_RUN_TEST(test_basic_remove);
 }

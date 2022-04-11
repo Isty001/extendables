@@ -1,12 +1,12 @@
 #include "../deps/minunit/minunit.h"
 
-void basic_setup_test_suite(void);
-void basic_remove_test_suite(void);
+void test_basic_load(void);
+void test_basic_remove(void);
 
 int main(void)
 {
-    MU_RUN_SUITE(basic_setup_test_suite);
-    MU_RUN_TEST(basic_remove_test_suite);
+    MU_RUN_TEST(test_basic_load);
+    MU_RUN_TEST(test_basic_remove);
 
     MU_REPORT();
 }

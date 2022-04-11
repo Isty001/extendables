@@ -28,8 +28,10 @@ static ext_call_code plugin_load(lua_State *lua, void *user_data)
     return EXT_CALL_OK;
 }
 
-MU_TEST(test_basic_setup)
+void test_basic_load(void)
 {
+    ext_test_suite_display();
+
     ext_app *app = NULL;
     ext_app_init_opts opts = {
         .load_function = plugin_load,
@@ -53,11 +55,4 @@ MU_TEST(test_basic_setup)
     free((void *) load_ctx.return_val);
 
     mu_assert(EXT_CODE_OK == ext_app_destroy(app, NULL), "Should return EXT_CODE_OK");
-}
-
-void basic_setup_test_suite(void)
-{
-    ext_test_suite_display();
-
-    MU_RUN_TEST(test_basic_setup);
 }
