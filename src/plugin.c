@@ -13,7 +13,7 @@
 
 #define ENTRY_POINT "main.lua"
 
-ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path, const ext_plugin_load_opts *opts)
+ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path, const ext_app_load_opts *opts)
 {
     //@TODO check if plugin->path is a directory
 
@@ -58,7 +58,10 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     }
 
     if (opts && app->load) {
-        code = EXT_CALL_OK == app->load(plugin->lua, opts->user_data) ? EXT_CODE_OK : EXT_CODE_PLUGIN_FAILURE;
+        ext_call_code call_code = app->load(plugin->lua, opts->user_data);
+        ext_log_debug(app, "%s(): Load function retruned: %d", __func__, call_code);
+
+        code = EXT_CALL_OK == call_code ? EXT_CODE_OK : EXT_CODE_PLUGIN_FAILURE;
     }
 
     if (EXT_CODE_OK == code) {
@@ -78,12 +81,15 @@ cleanup:
     return code;
 }
 
-ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_plugin_remove_opts *opts)
+ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_app_remove_opts *opts)
 {
     ext_code code = EXT_CODE_OK;
 
     if (opts && app->remove) {
-        code = EXT_CALL_OK == app->remove(plugin->lua, opts->user_data) ? EXT_CODE_OK : EXT_CODE_PLUGIN_FAILURE;
+        ext_call_code call_code = app->remove(plugin->lua, opts->user_data);
+        ext_log_debug(app, "%s(): Remove function retruned: %d", __func__, call_code);
+
+        code = EXT_CALL_OK == call_code ? EXT_CODE_OK : EXT_CODE_PLUGIN_FAILURE;
     }
 
     if (EXT_CODE_OK == code) {
@@ -104,7 +110,7 @@ ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_pl
 ext_code ext_plugin_call(const ext_app *app, ext_plugin_function function, const ext_app_call_opts *opts)
 {
     ext_app_plugin_item *item = app->plugin_list;
-    ext_call_code code             = EXT_CALL_OK;
+    ext_call_code code        = EXT_CALL_OK;
     bool had_errors           = false;
 
     while (item) {
@@ -115,6 +121,8 @@ ext_code ext_plugin_call(const ext_app *app, ext_plugin_function function, const
         if (EXT_CALL_OK != code) {
             ext_log_error(app, "%s(): Function call returned error code: %d in plugin %s", __func__, code, item->plugin->path);
             had_errors = true;
+        } else {
+            ext_log_debug(app, "%s(): Function call returned: %d in plugin %s", __func__, code, item->plugin->path);
         }
     }
 

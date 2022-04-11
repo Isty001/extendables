@@ -45,16 +45,16 @@ typedef struct ext_plugin ext_plugin;
 
 typedef struct {
     void *user_data;
-} ext_plugin_load_opts;
+} ext_app_load_opts;
 
-ext_code ext_app_load(ext_app *app, ext_plugin **plugin, const char *path, const ext_plugin_load_opts *opts);
+ext_code ext_app_load(ext_app *app, ext_plugin **plugin, const char *path, const ext_app_load_opts *opts);
 
 ext_code ext_plugin_get_attributes(const ext_app *app, ext_plugin *plugin, toml_table_t **attributes);
 
 typedef struct {
     void *user_data;
-} ext_plugin_remove_opts;
+} ext_app_remove_opts;
 
-ext_code ext_app_remove(ext_app *app, ext_plugin *plugin, const ext_plugin_remove_opts *opts);
+ext_code ext_app_remove(ext_app *app, ext_plugin *plugin, const ext_app_remove_opts *opts);
 
 #endif

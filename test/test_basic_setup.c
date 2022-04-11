@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "../deps/minunit/minunit.h"
 #include "../deps/strdup/strdup.h"
+#include "test.h"
 #include <extendables/extendables.h>
 
 typedef struct test_load_ctx {
@@ -8,7 +9,7 @@ typedef struct test_load_ctx {
     const char *return_val;
 } test_load_ctx;
 
-static ext_call_code load(lua_State *lua, void *user_data)
+static ext_call_code plugin_load(lua_State *lua, void *user_data)
 {
     test_load_ctx *load_ctx = user_data;
 
@@ -31,23 +32,23 @@ MU_TEST(test_basic_setup)
 {
     ext_app *app = NULL;
     ext_app_init_opts opts = {
-        .load_function = load,
+        .load_function = plugin_load,
         .log_file = "stdout",
     };
 
     mu_assert(EXT_CODE_OK == ext_app_init(&app, &opts), "Should return EXT_CODE_OK");
 
     test_load_ctx load_ctx = {
-        .parameter = "Load",
+        .parameter = "Test",
     };
 
-    ext_plugin *plugin = NULL;
-    ext_plugin_load_opts load_opts = {
+    ext_app_load_opts load_opts = {
         .user_data = &load_ctx
     };
+    ext_plugin *plugin = NULL;
 
-    mu_assert(EXT_CODE_OK == ext_app_load(app, &plugin, "./test/fixture/plugin_a", &load_opts), "Should return EXT_CODE_OK");
-    mu_assert_string_eq("Load Test", load_ctx.return_val);
+    mu_assert(EXT_CODE_OK == ext_app_load(app, &plugin, "./test/fixture/plugin_setup_only", &load_opts), "Should return EXT_CODE_OK");
+    mu_assert_string_eq("Test Load", load_ctx.return_val);
 
     free((void *) load_ctx.return_val);
 
@@ -56,5 +57,7 @@ MU_TEST(test_basic_setup)
 
 void basic_setup_test_suite(void)
 {
+    ext_test_suite_display();
+
     MU_RUN_TEST(test_basic_setup);
 }

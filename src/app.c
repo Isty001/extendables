@@ -38,13 +38,13 @@ ext_code ext_app_destroy(ext_app *app, const ext_app_destroy_opts *opts)
     ext_code code   = EXT_CODE_OK;
     bool had_errors = false;
 
-    ext_plugin_remove_opts remove_opts;
+    ext_app_remove_opts remove_opts;
     ext_app_plugin_item *tmp_item  = NULL;
     ext_app_plugin_item *curr_item = app->plugin_list;
 
     while (curr_item) {
         remove_opts.user_data = opts ? opts->remove_function_user_data : NULL;
-        code = ext_plugin_destroy(app, curr_item->plugin, &remove_opts);
+        code                  = ext_plugin_destroy(app, curr_item->plugin, &remove_opts);
 
         if (EXT_CODE_OK != code) {
             had_errors = true;
@@ -67,7 +67,7 @@ ext_code ext_app_destroy(ext_app *app, const ext_app_destroy_opts *opts)
     return EXT_CODE_OK;
 }
 
-ext_code ext_app_load(ext_app *app, ext_plugin **plugin, const char *path, const ext_plugin_load_opts *opts)
+ext_code ext_app_load(ext_app *app, ext_plugin **plugin, const char *path, const ext_app_load_opts *opts)
 {
     ext_check_not_null_arg(app);
     ext_check_not_null_arg(path);
@@ -103,7 +103,7 @@ ext_code ext_app_call(const ext_app *app, ext_plugin_function function, const ex
     return ext_plugin_call(app, function, opts);
 }
 
-ext_code ext_app_remove(ext_app *app, ext_plugin *plugin, const ext_plugin_remove_opts *opts)
+ext_code ext_app_remove(ext_app *app, ext_plugin *plugin, const ext_app_remove_opts *opts)
 {
     ext_check_not_null_arg(app);
     ext_check_not_null_arg(plugin);
@@ -115,6 +115,10 @@ ext_code ext_app_remove(ext_app *app, ext_plugin *plugin, const ext_plugin_remov
         if (plugin == curr_item->plugin) {
             if (prev_item) {
                 prev_item->next = curr_item->next;
+            }
+
+            if (curr_item == app->plugin_list) {
+                app->plugin_list = curr_item->next;
             }
 
             free(curr_item);

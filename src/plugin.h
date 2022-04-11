@@ -11,10 +11,10 @@ struct ext_plugin {
     toml_table_t *config;
 };
 
-ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path, const ext_plugin_load_opts *opts);
+ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path, const ext_app_load_opts *opts);
 
 ext_code ext_plugin_call(const ext_app *app, ext_plugin_function function, const ext_app_call_opts *opts);
 
-ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_plugin_remove_opts *opts);
+ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_app_remove_opts *opts);
 
 #endif
