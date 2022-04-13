@@ -23,14 +23,34 @@ static char *trim(char *version)
     return version;
 }
 
-ext_code ext_version_parse(char *source, char **result)
+char get_operator(const char *source)
 {
+    if ('^' == source[0]) {
+        return '^';
+    } else if ('~' == source[0]) {
+        return '~';
+    }
+
+    return 0;
+}
+
+ext_code ext_version_parse(ext_app *app, char *original)
+{
+    char *source = trim(original);
+    char operator = get_operator(source);
+
+    if (0 != operator)
+        source += 1;
+
     source = trim(source);
 
-    if (!*result)
-        return EXT_CODE_ALLOC_FAILED;
+    if (0 != semver_parse(source, &app->version.value)) {
+        ext_log_error(app, "%s(): Invalid version: %s", __func__, original);
 
-    /* trim(*result); */
+        return EXT_CODE_INVALID_ARGUMENT;
+    }
+
+    app->version.operator = operator;
 
     return EXT_CODE_OK;
 }

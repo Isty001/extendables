@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "../deps/ctest/ctest.h"
 #include "../deps/strdup/strdup.h"
-#include <extendables/extendables.h>
+#include "../include/extendables.h"
 
 typedef struct test_load_ctx {
     char *parameter;

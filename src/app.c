@@ -1,4 +1,5 @@
 #include "app.h"
+#include "version.h"
 #include "../deps/tinydir/tinydir.h"
 #include "logger.h"
 #include "plugin.h"
@@ -27,8 +28,6 @@ static ext_code load_from_installation_dir(ext_app *app, const char *path)
         tinydir_readfile(&dir, &file);
 
         if (file.is_dir && (0 != strcmp(".", file.name) && 0 != strcmp("..", file.name))) {
-            printf("File name %s <-\n", file.name);
-
             load_code = ext_app_load(app, &plugin, file.path, NULL);
 
             if (EXT_CODE_OK != load_code) {
@@ -55,11 +54,19 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
     (*app)->remove      = opts && opts->remove_function ? opts->remove_function : NULL;
     (*app)->plugin_list = NULL;
 
-    code = ext_log_init(*app, opts ? opts->log_file : "stdout");
+    if (EXT_CODE_OK != (code = ext_log_init(*app, opts ? opts->log_file : "stdout"))) {
+        goto cleanup;
+    }
 
-    if (EXT_CODE_OK != code) {
-        free(*app);
-        return code;
+    if (!opts->version_requirement) {
+        ext_log_error(*app, "%s(): Failed to initialize app, no version requirement provided", __func__);
+        code =  EXT_CODE_INVALID_ARGUMENT;
+
+        goto cleanup;
+    }
+
+    if (EXT_CODE_OK != (code = ext_version_parse(*app, opts->version_requirement))) {
+        goto cleanup;
     }
 
     if (!(*app))
@@ -75,6 +82,11 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
     }
 
     ext_log_debug(*app, "%s(): App initialized successfully", __func__);
+
+    return code;
+
+cleanup:
+    free(*app);
 
     return code;
 }
@@ -106,6 +118,7 @@ ext_code ext_app_destroy(ext_app *app, const ext_app_destroy_opts *opts)
     ext_log_debug(app, "%s(): App cleaned up successfully", __func__);
 
     ext_log_cleanup(app);
+    semver_free(&app->version.value);
     free(app);
 
     if (had_errors) {
