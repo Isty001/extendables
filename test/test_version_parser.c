@@ -1,5 +1,5 @@
+#include "../src/version.h"
 #include "../include/extendables.h"
-#include "../src/version.c"
 #include "../deps/ctest/ctest.h"
 
 

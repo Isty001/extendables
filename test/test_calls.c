@@ -30,9 +30,12 @@ static ext_call_code collect_animals(lua_State *lua, void *user_data)
 
 CTEST(test_call, happy_path)
 {
+    char version[] = "^1.3";
+
     ext_app *app = NULL;
     ext_app_init_opts opts = {
-        .log_file = "stdout"
+        .log_file = "stdout",
+        .version_requirement = version
     };
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_app_init(&app, &opts));

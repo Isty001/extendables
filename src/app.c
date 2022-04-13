@@ -59,7 +59,7 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
     }
 
     if (!opts->version_requirement) {
-        ext_log_error(*app, "%s(): Failed to initialize app, no version requirement provided", __func__);
+        ext_log_error(*app, "%s(): Failed to initialize app, no version_requirement provided", __func__);
         code =  EXT_CODE_INVALID_ARGUMENT;
 
         goto cleanup;

@@ -33,10 +33,13 @@ static ext_call_code collect_animals(lua_State *lua, void *user_data)
 
 CTEST(installition, happy_path)
 {
+    char version[] = "^ 1.4";
+
     ext_app *app = NULL;
     ext_app_init_opts opts = {
         .log_file = "stdout",
-        .installation_dir = "./test/fixture/installation_dir"
+        .installation_dir = "./test/fixture/installation_dir",
+        .version_requirement = version
     };
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_app_init(&app, &opts));
@@ -59,10 +62,13 @@ CTEST(installition, happy_path)
 
 CTEST(installition, containing_invalid_dir)
 {
+    char version[] = "^1.4";
+
     ext_app *app = NULL;
     ext_app_init_opts opts = {
         .log_file = "stdout",
-        .installation_dir = "./test/fixture/installation_dir_with_invalid_dir"
+        .installation_dir = "./test/fixture/installation_dir_with_invalid_dir",
+        .version_requirement = version
     };
 
     // 'non_plugin_dir' has no plugin.toml thus returning EXT_CODE_NOT_FOUND

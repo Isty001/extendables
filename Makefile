@@ -7,13 +7,13 @@ else
 	CFLAGS += -O1 -Os -DEXT_DEBUG=0 -DDEBUG=0 # Compatibility with external libraries
 endif
 
-CFLAGS += -std=c99 -Wall -Wextra -Werror -Wpedantic -ftrapv -Wshadow -Wundef -Wcast-align -Wunreachable-code -fstack-protector -D_FORTIFY_SOURCE=2
+CFLAGS += -std=c99 -Wall -Wextra -Werror -ftrapv -Wshadow -Wundef -Wcast-align -Wunreachable-code -fstack-protector -D_FORTIFY_SOURCE=2
 CFLAGS += -I .
 
 TEST_CFLAGS = $(CFLAGS)
 
 SRC = $(shell find src -name "*.c" -not -path src/bin/*) $(shell find deps -name "*.c")
-TEST_SRC = $(shell find test -name "*.c")
+TEST_SRC = $(shell find test -name "*.c") $(SRC)
 
 TARGET = extendables
 TEST_TARGET = $(TARGET)-test
@@ -75,7 +75,7 @@ install: $(TARGET)
 	sudo cp include/*.h $(INCLUDE_DIR)
 
 compile-test:
-	$(CC) $(TEST_CFLAGS) $(TEST_SRC) -o $(TEST_TARGET) -l$(TARGET)
+	$(CC) $(TEST_CFLAGS) $(TEST_SRC) -o $(TEST_TARGET) $(DEPS)
 
 test: clean compile-test
 	./$(TEST_TARGET)
