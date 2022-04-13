@@ -22,7 +22,7 @@ jobs:
           sudo make install
           sudo ldconfig
           sudo make test || exit 1
-          make test-valgrind || exit 1
+          make valgrind-test || exit 1
 #   macos:
 #     name: macOS
 #     runs-on: macos-latest
