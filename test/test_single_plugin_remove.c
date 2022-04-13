@@ -1,7 +1,6 @@
 #include <stdlib.h>
-#include "../deps/minunit/minunit.h"
+#include "../deps/ctest/ctest.h"
 #include "../deps/strdup/strdup.h"
-#include "test.h"
 #include <extendables/extendables.h>
 
 typedef struct test_remove_ctx {
@@ -28,20 +27,18 @@ static ext_call_code plugin_remove(lua_State *lua, void *user_data)
     return EXT_CALL_OK;
 }
 
-void test_basic_remove(void)
+CTEST(test_remove, single_plugin)
 {
-    ext_test_suite_display();
-
     ext_app *app = NULL;
     ext_app_init_opts opts = {
         .remove_function = plugin_remove,
         .log_file = "stdout"
     };
 
-    mu_assert(EXT_CODE_OK == ext_app_init(&app, &opts), "Should return EXT_CODE_OK");
+    ASSERT_EQUAL(EXT_CODE_OK, ext_app_init(&app, &opts));
 
     ext_plugin *plugin = NULL;
-    mu_assert(EXT_CODE_OK == ext_app_load(app, &plugin, "./test/fixture/plugin_remove_only", NULL), "Should return EXT_CODE_OK");
+    ASSERT_EQUAL(EXT_CODE_OK, ext_app_load(app, &plugin, "./test/fixture/plugin/remove_only", NULL));
 
     test_remove_ctx remove_ctx = {
         .parameter = "Test",
@@ -51,10 +48,10 @@ void test_basic_remove(void)
         .user_data = &remove_ctx
     };
 
-    mu_assert(EXT_CODE_OK == ext_app_remove(app, plugin, &remove_opts), "Should return EXT_CODE_OK");
-    mu_assert_string_eq("Test Remove", remove_ctx.return_val);
+    ASSERT_EQUAL(EXT_CODE_OK, ext_app_remove(app, plugin, &remove_opts));
+    ASSERT_STR("Test Remove", remove_ctx.return_val);
 
     free((void *) remove_ctx.return_val);
 
-    mu_assert(EXT_CODE_OK == ext_app_destroy(app, NULL), "Should return EXT_CODE_OK");
+    ASSERT_EQUAL(EXT_CODE_OK, ext_app_destroy(app, NULL));
 }

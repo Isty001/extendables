@@ -1,12 +1,9 @@
-#include "../deps/minunit/minunit.h"
+#define CTEST_MAIN
+#define CTEST_COLOR_OK
 
-void test_basic_load(void);
-void test_basic_remove(void);
+#include "../deps/ctest/ctest.h"
 
-int main(void)
+int main(int argc, const char *argv[])
 {
-    MU_RUN_TEST(test_basic_load);
-    MU_RUN_TEST(test_basic_remove);
-
-    MU_REPORT();
+    return ctest_main(argc, argv);
 }

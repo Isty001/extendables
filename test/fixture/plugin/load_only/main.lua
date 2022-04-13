@@ -1,3 +1,3 @@
-function setup(val)
+function load(val)
     return val .. " Load"
 end

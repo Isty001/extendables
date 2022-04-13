@@ -20,6 +20,7 @@ struct ext_app {
     ext_plugin_function load;
     ext_plugin_function remove;
     ext_app_plugin_item *plugin_list;
+    char *accepted_version;
 };
 
 #endif

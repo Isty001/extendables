@@ -2,15 +2,14 @@ CC ?= gcc
 DEPS = -l:liblua.a -ldl -lm
 
 ifdef EXT_DEBUG
-	CFLAGS += -g
+	CFLAGS += -g -DEXT_DEBUG=1 -DDEBUG=1 # Compatibility with external libraries
+else
+	CFLAGS += -O1 -Os -DEXT_DEBUG=0 -DDEBUG=0 # Compatibility with external libraries
 endif
 
 CFLAGS += -std=c99 -Wall -Wextra -Werror -Wpedantic -ftrapv -Wshadow -Wundef -Wcast-align -Wunreachable-code -fstack-protector -D_FORTIFY_SOURCE=2
 CFLAGS += -I .
 
-ifndef EXT_DEBUG
-	CFLAGS += -O1 -Os
-endif
 
 
 SRC = $(shell find src -name "*.c" -not -path src/bin/*) $(shell find deps -name "*.c")
@@ -80,6 +79,9 @@ compile-test:
 
 test: clean $(TARGET) install compile-test
 	./$(TEST_TARGET)
+
+valgrind-test:
+	valgrind --track-origins=yes --leak-check=full --show-reachable=yes --error-exitcode=1 ./$(TEST_TARGET)
 
 format:
 	clang-format -style=file -i $(SRC) src/*.h include/extendables.h
