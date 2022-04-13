@@ -7,6 +7,7 @@ static ext_app create_app(void)
 {
     ext_app app;
     app.log_file = stdout;
+    app.log_level = EXT_LOG_LEVEL_DEBUG;
     app.version.value = (semver_t){0};
     app.version.operator = 0;
 
