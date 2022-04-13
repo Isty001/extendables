@@ -3,9 +3,19 @@
 #include "../deps/ctest/ctest.h"
 
 
-CTEST(version, invalid)
+static ext_app create_app(void)
 {
     ext_app app;
+    app.log_file = stdout;
+    app.version.value = (semver_t){0};
+    app.version.operator = 0;
+
+    return app;
+}
+
+CTEST(version, invalid)
+{
+    ext_app app = create_app();
     char invalid[] = "Invalid";
 
     ASSERT_EQUAL(EXT_CODE_INVALID_ARGUMENT, ext_version_parse(&app, invalid));
@@ -13,7 +23,7 @@ CTEST(version, invalid)
 
 CTEST(version, no_operator)
 {
-    ext_app app;
+    ext_app app = create_app();
     char invalid[] = "1.5.0";
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_version_parse(&app, invalid));
@@ -26,7 +36,7 @@ CTEST(version, no_operator)
 
 CTEST(version, no_operator_with_spaces)
 {
-    ext_app app;
+    ext_app app = create_app();
     char invalid[] = "  1.5.0  ";
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_version_parse(&app, invalid));
@@ -38,7 +48,7 @@ CTEST(version, no_operator_with_spaces)
 
 CTEST(version, caret_operator)
 {
-    ext_app app;
+    ext_app app = create_app();
     char invalid[] = "^ 2.5.1";
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_version_parse(&app, invalid));
@@ -50,7 +60,7 @@ CTEST(version, caret_operator)
 
 CTEST(version, caret_operator_with_spaces)
 {
-    ext_app app;
+    ext_app app = create_app();
     char invalid[] = " ^   2.5.1 ";
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_version_parse(&app, invalid));
@@ -62,7 +72,7 @@ CTEST(version, caret_operator_with_spaces)
 
 CTEST(version, tilde_operator)
 {
-    ext_app app;
+    ext_app app = create_app();
     char invalid[] = "~ 3.5.0";
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_version_parse(&app, invalid));
@@ -74,7 +84,7 @@ CTEST(version, tilde_operator)
 
 CTEST(version, tilde_operator_with_spaces)
 {
-    ext_app app;
+    ext_app app = create_app();
     char invalid[] = "    ~1.8.0   ";
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_version_parse(&app, invalid));
@@ -86,7 +96,7 @@ CTEST(version, tilde_operator_with_spaces)
 
 CTEST(version, invalid_operator)
 {
-    ext_app app;
+    ext_app app = create_app();
     app.log_file = stdout;
 
     char invalid[] = "*~ 2.5.1";

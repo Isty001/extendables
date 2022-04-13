@@ -37,7 +37,7 @@ char get_operator(const char *source)
 ext_code ext_version_parse(ext_app *app, char *original)
 {
     char *source = trim(original);
-    char operator = get_operator(source);
+    char operator= get_operator(source);
 
     if (0 != operator)
         source += 1;
@@ -50,7 +50,7 @@ ext_code ext_version_parse(ext_app *app, char *original)
         return EXT_CODE_INVALID_ARGUMENT;
     }
 
-    app->version.operator = operator;
+    app->version.operator= operator;
 
     return EXT_CODE_OK;
 }

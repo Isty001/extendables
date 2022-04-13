@@ -21,9 +21,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
-          sudo make install
           sudo ldconfig
-          sudo make test || exit 1
+          sudo EXT_DEBUG=1 make test || exit 1
           make valgrind-test || exit 1
 #   macos:
 #     name: macOS

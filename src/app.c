@@ -1,9 +1,9 @@
 #include "app.h"
-#include "version.h"
 #include "../deps/tinydir/tinydir.h"
 #include "logger.h"
 #include "plugin.h"
 #include "util.h"
+#include "version.h"
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -49,10 +49,12 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
 
     *app = malloc(sizeof(ext_app));
 
-    (*app)->log_level   = opts && opts->log_level ? opts->log_level : EXT_LOG_LEVEL_DEBUG;
-    (*app)->load        = opts && opts->load_function ? opts->load_function : NULL;
-    (*app)->remove      = opts && opts->remove_function ? opts->remove_function : NULL;
-    (*app)->plugin_list = NULL;
+    (*app)->log_level       = opts && opts->log_level ? opts->log_level : EXT_LOG_LEVEL_DEBUG;
+    (*app)->load            = opts && opts->load_function ? opts->load_function : NULL;
+    (*app)->remove          = opts && opts->remove_function ? opts->remove_function : NULL;
+    (*app)->plugin_list     = NULL;
+    (*app)->version.value   = (semver_t){0};
+    (*app)->version.operator= 0;
 
     if (EXT_CODE_OK != (code = ext_log_init(*app, opts ? opts->log_file : "stdout"))) {
         goto cleanup;
@@ -60,7 +62,7 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
 
     if (!opts->version_requirement) {
         ext_log_error(*app, "%s(): Failed to initialize app, no version_requirement provided", __func__);
-        code =  EXT_CODE_INVALID_ARGUMENT;
+        code = EXT_CODE_INVALID_ARGUMENT;
 
         goto cleanup;
     }

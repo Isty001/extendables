@@ -1,12 +1,12 @@
 #ifndef LIB_EXTENDABLES_APP_H
 #define LIB_EXTENDABLES_APP_H
 
+#include "../deps/semver/semver.h"
 #include "logger.h"
 #include "plugin.h"
 #include <lualib.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "../deps/semver/semver.h"
 
 typedef struct ext_app_plugin_item ext_app_plugin_item;
 
