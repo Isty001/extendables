@@ -28,7 +28,7 @@ static ext_call_code collect_animals(lua_State *lua, void *user_data)
     return EXT_CALL_OK;
 }
 
-CTEST(test_call, string_builder)
+CTEST(test_call, basic)
 {
     ext_app *app = NULL;
     ext_app_init_opts opts = {

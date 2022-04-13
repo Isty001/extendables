@@ -75,6 +75,7 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     return code;
 
 cleanup:
+    free((void *) plugin->path);
     free(plugin);
     *plugin_ref = NULL;
 
@@ -98,6 +99,8 @@ ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_ap
         ext_log_error(app, "%s(): Unable to remove plugin: %s - Remove function failed.", __func__, plugin->path);
     }
 
+    printf("\n%p\n", plugin->path);
+
     lua_close(plugin->lua);
     free((void *)plugin->path);
     free((void *)plugin->api_version);
@@ -117,17 +120,17 @@ ext_code ext_plugin_call(const ext_app *app, ext_plugin_function function, const
         code = function(item->plugin->lua, opts->user_data);
 
         if (EXT_CALL_OK != code) {
-            ext_log_error(app, "%s(): Function call returned error code: %d in plugin %s", __func__, code, item->plugin->path);
+            ext_log_error(app, "%s(): Function call returned error code: %d in plugin: %s", __func__, code, item->plugin->path);
             had_errors = true;
         } else {
-            ext_log_debug(app, "%s(): Function call returned: %d in plugin %s", __func__, code, item->plugin->path);
+            ext_log_debug(app, "%s(): Function call returned: %d in plugin: %s", __func__, code, item->plugin->path);
         }
 
         item = item->next;
     }
 
     if (had_errors) {
-        return EXT_CODE_PLUGIN_CALL_INCOMPLETE;
+        return EXT_CODE_PLUGIN_FAILURE;
     }
 
     return EXT_CODE_OK;

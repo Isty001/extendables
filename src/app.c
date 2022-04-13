@@ -2,8 +2,48 @@
 #include "logger.h"
 #include "plugin.h"
 #include "util.h"
+#include "../deps/tinydir/tinydir.h"
 #include <stdbool.h>
 #include <stdlib.h>
+
+
+static ext_code load_from_installation_dir(ext_app *app, const char *path)
+{
+    tinydir_dir dir;
+
+    if (-1 == tinydir_open(&dir, path)) {
+        ext_log_error(app, "%s(): Cannot open installition dir: %s", __func__, path);
+
+        return EXT_CODE_INVALID_ARGUMENT;
+    }
+
+    ext_log_debug(app, "%s(): Loading plugins form installition dir: %s", __func__, path);
+
+    ext_plugin *plugin = NULL;
+    tinydir_file file;
+    ext_code final_code = EXT_CODE_OK;
+    ext_code load_code;
+
+    while (dir.has_next) {
+        tinydir_readfile(&dir, &file);
+
+        if (file.is_dir && (0 != strcmp(".", file.name) && 0 != strcmp("..", file.name))) {
+            printf("File name %s <-\n", file.name);
+
+            load_code = ext_app_load(app, &plugin, file.path, NULL);
+
+            if (EXT_CODE_OK != load_code) {
+                final_code = load_code;
+            }
+        }
+
+        tinydir_next(&dir);
+    }
+
+    tinydir_close(&dir);
+
+    return final_code;
+}
 
 ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
 {
@@ -25,6 +65,16 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
 
     if (!(*app))
         return EXT_CODE_ALLOC_FAILED;
+
+
+    if (opts->installation_dir) {
+        ext_code install_code = load_from_installation_dir(*app, opts->installation_dir);
+
+        if (EXT_CODE_OK != install_code) {
+            ext_log_error(*app, "%s(): Unable to load plugins from installition dir: %s", __func__, opts->installation_dir);
+            code = install_code;
+        }
+    }
 
     ext_log_debug(*app, "%s(): App initialized successfully", __func__);
 
@@ -61,7 +111,7 @@ ext_code ext_app_destroy(ext_app *app, const ext_app_destroy_opts *opts)
     free(app);
 
     if (had_errors) {
-        return EXT_CODE_PLUGIN_CALL_INCOMPLETE;
+        return EXT_CODE_PLUGIN_FAILURE;
     }
 
     return EXT_CODE_OK;
