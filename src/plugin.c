@@ -99,8 +99,6 @@ ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_ap
         ext_log_error(app, "%s(): Unable to remove plugin: %s - Remove function failed.", __func__, plugin->path);
     }
 
-    printf("\n%p\n", plugin->path);
-
     lua_close(plugin->lua);
     free((void *)plugin->path);
     free((void *)plugin->api_version);

@@ -27,7 +27,7 @@ static ext_call_code plugin_load(lua_State *lua, void *user_data)
     return EXT_CALL_OK;
 }
 
-CTEST(test_load, single_plugin)
+CTEST(load, happy_path)
 {
     ext_app *app = NULL;
     ext_app_init_opts opts = {
