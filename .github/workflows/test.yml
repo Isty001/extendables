@@ -16,6 +16,8 @@ jobs:
           sed -i 's/MYCFLAGS=/MYCFLAGS=-fpic/g' src/Makefile # relocation R_X86_64_PC32 against symbol `lua_newstate' can not be used when making a shared object; recompile with -fPIC
           make
           sudo make install
+          sudo apt-get update -y
+          sudo apt-get install -y valgrind
       - uses: actions/checkout@v2
       - name: Run Tests
         run: |
