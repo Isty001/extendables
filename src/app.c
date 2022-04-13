@@ -1,11 +1,10 @@
 #include "app.h"
+#include "../deps/tinydir/tinydir.h"
 #include "logger.h"
 #include "plugin.h"
 #include "util.h"
-#include "../deps/tinydir/tinydir.h"
 #include <stdbool.h>
 #include <stdlib.h>
-
 
 static ext_code load_from_installation_dir(ext_app *app, const char *path)
 {
@@ -65,7 +64,6 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
 
     if (!(*app))
         return EXT_CODE_ALLOC_FAILED;
-
 
     if (opts->installation_dir) {
         ext_code install_code = load_from_installation_dir(*app, opts->installation_dir);

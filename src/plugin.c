@@ -75,7 +75,7 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     return code;
 
 cleanup:
-    free((void *) plugin->path);
+    free((void *)plugin->path);
     free(plugin);
     *plugin_ref = NULL;
 

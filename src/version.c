@@ -1,10 +1,9 @@
-#include "../include/extendables.h"
 #include "../deps/strdup/strdup.h"
+#include "../include/extendables.h"
 #include "app.h"
 #include <ctype.h>
-#include <string.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 static char *trim(char *version)
 {
