@@ -1,4 +1,5 @@
 #include "plugin.h"
+#include "../deps/semver/semver.h"
 #include "../deps/strdup/strdup.h"
 #include "app.h"
 #include "config.h"
@@ -10,13 +11,17 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../deps/semver/semver.h"
 
 #define ENTRY_POINT "main.lua"
 
-/* static ext_code match_version(const ext_app *app, const ext_app_load_opts *opts) */
-/* { */
-/* } */
+static ext_code match_version(const ext_app *app, const ext_plugin *plugin)
+{
+    if (0 == semver_satisfies(app->version.value, plugin->api_version.value, &app->version.operator)) {
+        return EXT_CODE_INVALID_ARGUMENT;
+    }
+
+    return EXT_CODE_OK;
+}
 
 ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path, const ext_app_load_opts *opts)
 {
@@ -27,9 +32,9 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     if (!plugin)
         return EXT_CODE_ALLOC_FAILED;
 
-    plugin->api_version = NULL;
-    plugin->config      = NULL;
-    plugin->path        = strdup(path);
+    plugin->api_version.raw = NULL;
+    plugin->config          = NULL;
+    plugin->path            = strdup(path);
 
     *plugin_ref = plugin;
 
@@ -41,6 +46,14 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
 
     if (EXT_CODE_OK != code) {
         ext_log_error(app, "%s(): Failed to initialize plugin %s - Unable to load config", __func__, plugin->path);
+
+        goto cleanup;
+    }
+
+    code = match_version(app, plugin);
+
+    if (EXT_CODE_OK != code) {
+        ext_log_error(app, "%s(): Failed to initialize plugin %s: App version requirement %s is not satisfiable by %s", __func__, plugin->path, app->version.raw, plugin->api_version.raw);
 
         goto cleanup;
     }
@@ -80,6 +93,11 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     return code;
 
 cleanup:
+    if (plugin->api_version.raw) {
+        semver_free(&plugin->api_version.value);
+        free(plugin->api_version.raw);
+    }
+
     free((void *)plugin->path);
     free(plugin);
     *plugin_ref = NULL;
@@ -105,9 +123,10 @@ ext_code ext_plugin_destroy(const ext_app *app, ext_plugin *plugin, const ext_ap
     }
 
     lua_close(plugin->lua);
-    free((void *)plugin->path);
-    free((void *)plugin->api_version);
+    semver_free(&plugin->api_version.value);
+    free(plugin->api_version.raw);
     toml_free(plugin->config);
+    free((void *)plugin->path);
     free(plugin);
 
     return EXT_CODE_OK;

@@ -1,4 +1,5 @@
 #include "config.h"
+#include "../deps/semver/semver.h"
 #include "../deps/strdup/strdup.h"
 #include "../include/toml.h"
 #include "logger.h"
@@ -35,6 +36,24 @@ static char *get_required_string(const ext_app *app, toml_table_t *cfg, const ch
     return value.u.s;
 }
 
+static ext_code parse_api_version(const ext_app *app, ext_plugin *plugin, toml_table_t *cfg)
+{
+    char *raw = get_required_string(app, cfg, "api_version");
+
+    if (!raw)
+        return EXT_CODE_INVALID_ARGUMENT;
+
+    plugin->api_version.raw = strdup(raw);
+
+    if (0 != semver_parse(raw, &plugin->api_version.value)) {
+        ext_log_error(app, "%s(): Invalid api version: %s", __func__, raw);
+
+        return EXT_CODE_INVALID_ARGUMENT;
+    }
+
+    return EXT_CODE_OK;
+}
+
 ext_code ext_config_load(const ext_app *app, ext_plugin *plugin)
 {
     FILE *file = open_file(app, plugin);
@@ -61,11 +80,12 @@ ext_code ext_config_load(const ext_app *app, ext_plugin *plugin)
         return EXT_CODE_INVALID_ARGUMENT;
     }
 
-    plugin->api_version = get_required_string(app, plugin_cfg, "api_version");
-    plugin->config      = cfg;
+    ext_code code = parse_api_version(app, plugin, plugin_cfg);
 
-    if (NULL == plugin->api_version)
-        return EXT_CODE_INVALID_ARGUMENT;
+    if (EXT_CODE_OK != code)
+        return code;
+
+    plugin->config = cfg;
 
     ext_log_debug(app, "%s(): Config loaded: %s%s%s", __func__, plugin->path, EXT_DIRECTORY_SEPARATOR, FILE_NAME);
 

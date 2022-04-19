@@ -1,13 +1,17 @@
 #ifndef LIB_EXTENDABLES_PLUGIN_H
 #define LIB_EXTENDABLES_PLUGIN_H
 
+#include "../deps/semver/semver.h"
 #include "../include/extendables.h"
 #include <lualib.h>
 
 struct ext_plugin {
     lua_State *lua;
     const char *path;
-    const char *api_version;
+    struct {
+        char *raw;
+        semver_t value;
+    } api_version;
     toml_table_t *config;
 };
 

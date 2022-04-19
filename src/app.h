@@ -15,18 +15,17 @@ struct ext_app_plugin_item {
     ext_app_plugin_item *next;
 };
 
-typedef struct {
-    semver_t value;
-    char operator;
-} ext_app_version;
-
 struct ext_app {
     FILE *log_file;
     ext_log_level log_level;
     ext_plugin_function load;
     ext_plugin_function remove;
     ext_app_plugin_item *plugin_list;
-    ext_app_version version;
+    struct {
+        char *raw;
+        semver_t value;
+        char operator;
+    } version;
 };
 
 #endif

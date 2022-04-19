@@ -29,7 +29,7 @@ static ext_call_code plugin_remove(lua_State *lua, void *user_data)
 
 CTEST(remove, happy_path)
 {
-    char version[] = "^ 1.0";
+    char version[] = "^ 1.2";
 
     ext_app *app = NULL;
     ext_app_init_opts opts = {
