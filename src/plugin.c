@@ -32,9 +32,10 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     if (!plugin)
         return EXT_CODE_ALLOC_FAILED;
 
-    plugin->api_version.raw = NULL;
-    plugin->config          = NULL;
-    plugin->path            = strdup(path);
+    plugin->api_version.value = (semver_t){0};
+    plugin->api_version.raw   = NULL;
+    plugin->config            = NULL;
+    plugin->path              = strdup(path);
 
     *plugin_ref = plugin;
 
@@ -93,10 +94,8 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
     return code;
 
 cleanup:
-    if (plugin->api_version.raw) {
-        semver_free(&plugin->api_version.value);
-        free(plugin->api_version.raw);
-    }
+    semver_free(&plugin->api_version.value);
+    free(plugin->api_version.raw);
 
     free((void *)plugin->path);
     free(plugin);

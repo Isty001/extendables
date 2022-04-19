@@ -43,7 +43,7 @@ static ext_code parse_api_version(const ext_app *app, ext_plugin *plugin, toml_t
     if (!raw)
         return EXT_CODE_INVALID_ARGUMENT;
 
-    plugin->api_version.raw = strdup(raw);
+    plugin->api_version.raw = raw;
 
     if (0 != semver_parse(raw, &plugin->api_version.value)) {
         ext_log_error(app, "%s(): Invalid api version: %s", __func__, raw);

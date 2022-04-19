@@ -62,8 +62,8 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
     (*app)->load            = opts && opts->load_function ? opts->load_function : NULL;
     (*app)->remove          = opts && opts->remove_function ? opts->remove_function : NULL;
     (*app)->plugin_list     = NULL;
-    (*app)->version.value   = (semver_t){0};
     (*app)->version.operator= 0;
+    (*app)->version.value   = (semver_t){0};
     (*app)->version.raw     = strdup(opts->version_requirement);
 
     if (EXT_CODE_OK != (code = ext_log_init(*app, opts ? opts->log_file : "stdout"))) {
