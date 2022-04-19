@@ -31,7 +31,7 @@ char get_operator(const char *source)
         return '~';
     }
 
-    return 0;
+    return '=';
 }
 
 ext_code ext_version_parse(ext_app *app, char *original)
@@ -39,7 +39,7 @@ ext_code ext_version_parse(ext_app *app, char *original)
     char *source = trim(original);
     char operator= get_operator(source);
 
-    if (0 != operator)
+    if ('=' != operator)
         source += 1;
 
     source = trim(source);

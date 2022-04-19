@@ -10,8 +10,13 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../deps/semver/semver.h"
 
 #define ENTRY_POINT "main.lua"
+
+/* static ext_code match_version(const ext_app *app, const ext_app_load_opts *opts) */
+/* { */
+/* } */
 
 ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path, const ext_app_load_opts *opts)
 {
@@ -52,7 +57,7 @@ ext_code ext_plugin_init(ext_app *app, ext_plugin **plugin_ref, const char *path
 
     if (0 != luaL_dofile(plugin->lua, entry_point)) {
         ext_log_error(app, "%s(): Failed to initialize plugin %s - luaL_dofile(): error loading file: %s", __func__, entry_point, lua_tostring(plugin->lua, -1));
-        code = EXT_CODE_LUA_ERROR;
+        code = EXT_CODE_PLUGIN_FAILURE;
 
         goto cleanup;
     }

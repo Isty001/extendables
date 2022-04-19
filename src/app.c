@@ -45,6 +45,12 @@ static ext_code load_from_installation_dir(ext_app *app, const char *path)
 
 ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
 {
+    if (!opts->version_requirement) {
+        ext_log_error(*app, "%s(): Failed to initialize the app, no version_requirement provided", __func__);
+
+        return  EXT_CODE_INVALID_ARGUMENT;
+    }
+
     ext_code code = EXT_CODE_OK;
 
     *app = malloc(sizeof(ext_app));
@@ -57,13 +63,6 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
     (*app)->version.operator= 0;
 
     if (EXT_CODE_OK != (code = ext_log_init(*app, opts ? opts->log_file : "stdout"))) {
-        goto cleanup;
-    }
-
-    if (!opts->version_requirement) {
-        ext_log_error(*app, "%s(): Failed to initialize app, no version_requirement provided", __func__);
-        code = EXT_CODE_INVALID_ARGUMENT;
-
         goto cleanup;
     }
 

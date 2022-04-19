@@ -22,7 +22,7 @@ CTEST(version, invalid)
     ASSERT_EQUAL(EXT_CODE_INVALID_ARGUMENT, ext_version_parse(&app, invalid));
 }
 
-CTEST(version, no_operator)
+CTEST(version, default_operator)
 {
     ext_app app = create_app();
     char invalid[] = "1.5.0";
@@ -31,11 +31,11 @@ CTEST(version, no_operator)
     ASSERT_EQUAL(1, app.version.value.major);
     ASSERT_EQUAL(5, app.version.value.minor);
     ASSERT_EQUAL(0, app.version.value.patch);
-    ASSERT_EQUAL(0, app.version.operator);
+    ASSERT_EQUAL('=', app.version.operator);
 }
 
 
-CTEST(version, no_operator_with_spaces)
+CTEST(version, default_operator_with_spaces)
 {
     ext_app app = create_app();
     char invalid[] = "  1.5.0  ";
@@ -44,7 +44,7 @@ CTEST(version, no_operator_with_spaces)
     ASSERT_EQUAL(1, app.version.value.major);
     ASSERT_EQUAL(5, app.version.value.minor);
     ASSERT_EQUAL(0, app.version.value.patch);
-    ASSERT_EQUAL(0, app.version.operator);
+    ASSERT_EQUAL('=', app.version.operator);
 }
 
 CTEST(version, caret_operator)
@@ -103,4 +103,9 @@ CTEST(version, invalid_operator)
     char invalid[] = "*~ 2.5.1";
 
     ASSERT_EQUAL(EXT_CODE_INVALID_ARGUMENT, ext_version_parse(&app, invalid));
+
+    ASSERT_EQUAL(0, app.version.value.major);
+    ASSERT_EQUAL(0, app.version.value.minor);
+    ASSERT_EQUAL(0, app.version.value.patch);
+    ASSERT_EQUAL(0, app.version.operator);
 }
