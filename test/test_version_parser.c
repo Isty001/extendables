@@ -14,7 +14,7 @@ static ext_app create_app(void)
     return app;
 }
 
-CTEST(version, invalid)
+CTEST(version_parser, invalid)
 {
     ext_app app = create_app();
     char invalid[] = "Invalid";
@@ -22,7 +22,7 @@ CTEST(version, invalid)
     ASSERT_EQUAL(EXT_CODE_INVALID_ARGUMENT, ext_version_parse(&app, invalid));
 }
 
-CTEST(version, default_operator)
+CTEST(version_parser, default_operator)
 {
     ext_app app = create_app();
     char invalid[] = "1.5.0";
@@ -35,7 +35,7 @@ CTEST(version, default_operator)
 }
 
 
-CTEST(version, default_operator_with_spaces)
+CTEST(version_parser, default_operator_with_spaces)
 {
     ext_app app = create_app();
     char invalid[] = "  1.5.0  ";
@@ -47,7 +47,7 @@ CTEST(version, default_operator_with_spaces)
     ASSERT_EQUAL('=', app.version.operator);
 }
 
-CTEST(version, caret_operator)
+CTEST(version_parser, caret_operator)
 {
     ext_app app = create_app();
     char invalid[] = "^ 2.5.1";
@@ -59,7 +59,7 @@ CTEST(version, caret_operator)
     ASSERT_EQUAL('^', app.version.operator);
 }
 
-CTEST(version, caret_operator_with_spaces)
+CTEST(version_parser, caret_operator_with_spaces)
 {
     ext_app app = create_app();
     char invalid[] = " ^   2.5.1 ";
@@ -71,7 +71,7 @@ CTEST(version, caret_operator_with_spaces)
     ASSERT_EQUAL('^', app.version.operator);
 }
 
-CTEST(version, tilde_operator)
+CTEST(version_parser, tilde_operator)
 {
     ext_app app = create_app();
     char invalid[] = "~ 3.5.0";
@@ -83,7 +83,7 @@ CTEST(version, tilde_operator)
     ASSERT_EQUAL('~', app.version.operator);
 }
 
-CTEST(version, tilde_operator_with_spaces)
+CTEST(version_parser, tilde_operator_with_spaces)
 {
     ext_app app = create_app();
     char invalid[] = "    ~1.8.0   ";
@@ -95,7 +95,7 @@ CTEST(version, tilde_operator_with_spaces)
     ASSERT_EQUAL('~', app.version.operator);
 }
 
-CTEST(version, invalid_operator)
+CTEST(version_parser, invalid_operator)
 {
     ext_app app = create_app();
     app.log_file = stdout;

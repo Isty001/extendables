@@ -22,8 +22,7 @@ jobs:
       - name: Run Tests
         run: |
           sudo ldconfig
-          sudo EXT_DEBUG=1 make test || exit 1
-          make valgrind-test || exit 1
+          make EXT_DEBUG=1 valgrind-test || exit 1
 #   macos:
 #     name: macOS
 #     runs-on: macos-latest

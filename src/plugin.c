@@ -97,6 +97,9 @@ cleanup:
     semver_free(&plugin->api_version.value);
     free(plugin->api_version.raw);
 
+    if (plugin->config)
+        toml_free(plugin->config);
+
     free((void *)plugin->path);
     free(plugin);
     *plugin_ref = NULL;

@@ -80,7 +80,7 @@ compile-test:
 test: clean compile-test
 	./$(TEST_TARGET)
 
-valgrind-test:
+valgrind-test: clean compile-test
 	valgrind --track-origins=yes --leak-check=full --show-reachable=yes --error-exitcode=1 ./$(TEST_TARGET)
 
 format:

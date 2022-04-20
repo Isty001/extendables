@@ -50,8 +50,6 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
     /* ext_check_not_null_arg(opts); */
 
     if (!opts->version_requirement) {
-        ext_log_error(*app, "%s(): Failed to initialize the app, no version_requirement provided", __func__);
-
         return EXT_CODE_INVALID_ARGUMENT;
     }
 
