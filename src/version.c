@@ -36,7 +36,8 @@ char get_operator(const char *source)
 
 ext_code ext_version_parse(ext_app *app, char *original)
 {
-    char *source = trim(original);
+    char *duplicate = strdup(original);
+    char *source = trim(duplicate);
     char operator= get_operator(source);
 
     if ('=' != operator)
@@ -46,9 +47,12 @@ ext_code ext_version_parse(ext_app *app, char *original)
 
     if (0 != semver_parse(source, &app->version.value)) {
         ext_log_error(app, "%s(): Invalid version: %s", __func__, original);
+        free(duplicate);
 
         return EXT_CODE_INVALID_ARGUMENT;
     }
+
+    free(duplicate);
 
     app->version.operator= operator;
 
