@@ -35,7 +35,7 @@ CTEST(test_call, happy_path)
     ext_app *app = NULL;
     ext_app_init_opts opts = {
         .log_file = "stdout",
-        .version_requirement = version
+        .api_version_requirement = version
     };
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_app_init(&app, &opts));

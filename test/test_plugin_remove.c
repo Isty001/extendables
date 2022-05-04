@@ -35,7 +35,7 @@ CTEST(remove, happy_path)
     ext_app_init_opts opts = {
         .remove_function = plugin_remove,
         .log_file = "stdout",
-        .version_requirement = version
+        .api_version_requirement = version
     };
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_app_init(&app, &opts));

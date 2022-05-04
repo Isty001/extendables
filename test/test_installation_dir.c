@@ -39,7 +39,7 @@ CTEST(installition, happy_path)
     ext_app_init_opts opts = {
         .log_file = "stdout",
         .installation_dir = "./test/fixture/installation_dir",
-        .version_requirement = version
+        .api_version_requirement = version
     };
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_app_init(&app, &opts));
@@ -68,7 +68,7 @@ CTEST(installition, containing_invalid_dir)
     ext_app_init_opts opts = {
         .log_file = "stdout",
         .installation_dir = "./test/fixture/installation_dir_with_invalid_dir",
-        .version_requirement = version
+        .api_version_requirement = version
     };
 
     // 'non_plugin_dir' has no plugin.toml thus returning EXT_CODE_NOT_FOUND

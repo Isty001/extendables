@@ -23,7 +23,7 @@ typedef struct {
     char *installation_dir;
     ext_plugin_function load_function;
     ext_plugin_function remove_function;
-    char *version_requirement;
+    char *api_version_requirement;
 } ext_app_init_opts;
 
 typedef struct ext_app ext_app;

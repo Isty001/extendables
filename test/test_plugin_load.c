@@ -35,7 +35,7 @@ CTEST(load, happy_path)
     ext_app_init_opts opts = {
         .load_function = plugin_load,
         .log_file = "stdout",
-        .version_requirement = version
+        .api_version_requirement = version
     };
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_app_init(&app, &opts));

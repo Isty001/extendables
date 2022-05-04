@@ -49,7 +49,7 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
     // @TODO check null opts
     /* ext_check_not_null_arg(opts); */
 
-    if (!opts->version_requirement) {
+    if (!opts->api_version_requirement) {
         return EXT_CODE_INVALID_ARGUMENT;
     }
 
@@ -63,13 +63,13 @@ ext_code ext_app_init(ext_app **app, const ext_app_init_opts *opts)
     (*app)->plugin_list     = NULL;
     (*app)->version.operator= 0;
     (*app)->version.value   = (semver_t){0};
-    (*app)->version.raw     = strdup(opts->version_requirement);
+    (*app)->version.raw     = strdup(opts->api_version_requirement);
 
     if (EXT_CODE_OK != (code = ext_log_init(*app, opts ? opts->log_file : "stdout"))) {
         goto cleanup;
     }
 
-    if (EXT_CODE_OK != (code = ext_version_parse(*app, opts->version_requirement))) {
+    if (EXT_CODE_OK != (code = ext_version_parse(*app, opts->api_version_requirement))) {
         goto cleanup;
     }
 
