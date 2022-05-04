@@ -22,17 +22,17 @@ VERSION_MAJOR = 1
 VERSION_MINOR = 0
 VERSION_PATCH = 0
 
-LIB_OBJ = lib$(TARGET).so
-SONAME = $(LIB_OBJ).$(VERSION_MAJOR)
-MINOR_NAME = $(SONAME).$(VERSION_MINOR)
-FULL_NAME = $(MINOR_NAME).$(VERSION_PATCH)
+D_TARGET = $(TARGET).so
+D_SONAME = lib$(TARGET).so.$(VERSION_MAJOR)
+
+S_TARGET = $(TARGET).a
 
 OS := $(shell uname)
 
 ifeq ($(OS),Darwin)
-	SONAME_ARG = -install_name,$(SONAME)
+	D_SONAME_ARG = -install_name,$(D_SONAME)
 else
-	SONAME_ARG = -soname,$(SONAME)
+	D_SONAME_ARG = -soname,$(D_SONAME)
 endif
 
 INCLUDE_DIR = /usr/local/include/$(TARGET)
@@ -44,7 +44,7 @@ OBJECTS = $(patsubst %.c, $(DIR_BUILD)/%.o, $(SRC))
 TEST_OBJECTS = $(patsubst %.c, $(DIR_BUILD)/%.o, $(TEST_SRC))
 
 
-default: $(TARGET)
+default: $(D_TARGET) $(S_TARGET)
 
 -include $(shell find $(DIR_BUILD) -name "*.d")
 
@@ -56,8 +56,11 @@ $(DIR_BUILD)/%.o: %.c
 .PRECIOUS: $(TARGET) $(OBJECTS)
 
 
-$(TARGET): $(OBJECTS)
-	$(CC) -shared -fpic -Wl,$(SONAME_ARG) -o $(FULL_NAME) $(OBJECTS) $(DEPS)
+$(D_TARGET): $(OBJECTS)
+	$(CC) -shared -fpic -Wl,$(D_SONAME_ARG) -o $(D_TARGET) $(OBJECTS) $(DEPS)
+
+$(S_TARGET): $(OBJECTS)
+	$(AR) $(ARFLAGS) $@ $^
 
 $(TEST_TARGET): $(TEST_OBJECTS)
 	$(CC) $(TEST_OBJECTS) $(CFLAGS) -o $@
@@ -66,11 +69,9 @@ clean:
 	rm -rf $(DIR_BUILD)/*
 	rm -f $(TEST_TARGET)
 
-install: $(TARGET)
-	sudo mv $(FULL_NAME) $(LIB_DIR)
-	ln -sf $(LIB_DIR)/$(FULL_NAME) $(LIB_DIR)/$(MINOR_NAME)
-	ln -sf $(LIB_DIR)/$(MINOR_NAME) $(LIB_DIR)/$(SONAME)
-	ln -sf $(LIB_DIR)/$(SONAME) $(LIB_DIR)/$(LIB_OBJ)
+install: $(D_TARGET)
+	sudo mv $(D_TARGET) $(LIB_DIR)/lib$(D_TARGET)
+	sudo mv $(S_TARGET) $(LIB_DIR)/lib$(S_TARGET)
 	sudo mkdir -p $(INCLUDE_DIR)
 	sudo cp include/*.h $(INCLUDE_DIR)
 
