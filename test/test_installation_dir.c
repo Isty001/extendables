@@ -1,5 +1,6 @@
 #include "../deps/ctest/ctest.h"
 #include <stdlib.h>
+#include <string.h>
 #include "../deps/ctest/ctest.h"
 #include "../include/extendables.h"
 #include "../deps/strdup/strdup.h"
@@ -53,7 +54,11 @@ CTEST(installition, happy_path)
     };
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_app_call(app, collect_animals, &call_opts));
-    ASSERT_STR("Animals: Dog, Cat", call_ctx.result);
+    ASSERT_TRUE(
+        0 == strcmp("Animals: Dog, Cat", call_ctx.result)
+        ||
+        0 == strcmp("Animals: Cat, Dog", call_ctx.result)
+    );
 
     free((void *)call_ctx.result);
 
@@ -83,7 +88,11 @@ CTEST(installition, containing_invalid_dir)
     };
 
     ASSERT_EQUAL(EXT_CODE_OK, ext_app_call(app, collect_animals, &call_opts));
-    ASSERT_STR("Animals: Dog, Cat", call_ctx.result);
+    ASSERT_TRUE(
+        0 == strcmp("Animals: Dog, Cat", call_ctx.result)
+        ||
+        0 == strcmp("Animals: Cat, Dog", call_ctx.result)
+    );
 
     free((void *)call_ctx.result);
 
