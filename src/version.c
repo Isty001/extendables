@@ -37,8 +37,8 @@ char get_operator(const char *source)
 ext_code ext_version_parse(ext_app *app, char *original)
 {
     char *duplicate = strdup(original);
-    char *source = trim(duplicate);
-    char operator= get_operator(source);
+    char *source    = trim(duplicate);
+    char operator   = get_operator(source);
 
     if ('=' != operator)
         source += 1;
