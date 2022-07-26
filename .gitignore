@@ -17,3 +17,5 @@ sandbox/
 build/
 html/
 latex/
+
+compile_commands.json
